@@ -2,16 +2,10 @@ package com.demo.BasicAPICreation.modal;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
 
 @Entity
-@AllArgsConstructor
-@NoArgsConstructor
 @Data
-@ToString
 public class Product {
     @Id
     @Column(name = "product_id")

@@ -1,28 +1,43 @@
 package com.demo.BasicAPICreation.service;
 
 import com.demo.BasicAPICreation.modal.Product;
+import com.demo.BasicAPICreation.repo.ProductRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @Service
 public class ProductService {
 
-    List<Product> products = new ArrayList<>(
-            List.of(
-                    new Product(1, "Iphone", 54000, 32, "It's a high demand phone now"),
-                    new Product(2, "Samsung", 45000, 36, "It's a medium demand phone now")
-            )
-    );
+    @Autowired
+    ProductRepository productRepository;
 
     public List<Product> getAllProducts() {
-        return products;
+        return productRepository.findAll();
     }
 
-    public boolean addProduct(Product product) {
-        products.add(product);
-        return true;
+    public Product addProduct(Product product) {
+        return productRepository.save(product);
+    }
+
+    public boolean updateProduct(int id) {
+        for(Product product : productRepository.findAll()) {
+            if(product.getId() == id) {
+                product.setPrice(product.getPrice() + 1000);
+                productRepository.save(product);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean deleteProduct(int id) {
+        for(Product product : productRepository.findAll()) {
+            if(product.getId() == id) {
+                productRepository.delete(product);
+                return true;
+            }
+        }
+        return false;
     }
 }
