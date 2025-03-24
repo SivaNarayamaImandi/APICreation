@@ -27,7 +27,9 @@ public class ProductController {
         return (CsrfToken) request.getAttribute("_csrf");
     }
 
-    @GetMapping("/products")
+//    changed patterns for readability
+
+    @GetMapping("/get-products")
     public ResponseEntity<List<Product>> getProducts() {
         if (productService.getAllProducts() == null || productService.getAllProducts().isEmpty()) {
             return new ResponseEntity<List<Product>>(productService.getAllProducts(), HttpStatus.NOT_FOUND);
@@ -35,21 +37,21 @@ public class ProductController {
         return new ResponseEntity<List<Product>>(productService.getAllProducts(), HttpStatus.OK);
     }
 
-    @PostMapping("/products")
+    @PostMapping("/add-products")
     public ResponseEntity<String> addProduct(@RequestBody Product product) {
         if (productService.addProduct(product) != null)
             return new ResponseEntity<String>("Product added successfully", HttpStatus.CREATED);
         return new ResponseEntity<String>("Url is not valid...", HttpStatus.BAD_REQUEST);
     }
 
-    @PutMapping("/products/{id}")
+    @PutMapping("/update-product/{id}")
     public ResponseEntity<String> updateProduct(@PathVariable int id) {
         if (productService.updateProduct(id))
             return new ResponseEntity<String>("Product updated successful...", HttpStatus.CREATED);
         return new ResponseEntity<String>("Product not found successful...", HttpStatus.NOT_FOUND);
     }
 
-    @DeleteMapping("/products/{id}")
+    @DeleteMapping("/delete-product/{id}")
     public ResponseEntity<String> deleteProduct(@PathVariable int id) {
         if (productService.deleteProduct(id))
             return new ResponseEntity<String>("Product deleted successfully...", HttpStatus.OK);

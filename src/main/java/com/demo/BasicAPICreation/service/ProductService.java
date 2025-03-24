@@ -28,6 +28,8 @@ public class ProductService implements UserDetailsService {
     }
 
     public List<Product> getAllProducts() {
+        if (productRepository.findAll().isEmpty())
+            throw new UsernameNotFoundException("Product Not Found");
         return productRepository.findAll();
     }
 
@@ -44,7 +46,7 @@ public class ProductService implements UserDetailsService {
                 return true;
             }
         }
-        return false;
+        throw new UsernameNotFoundException("Product Not Found");
     }
 
     public boolean deleteProduct(int id) {
@@ -54,6 +56,6 @@ public class ProductService implements UserDetailsService {
                 return true;
             }
         }
-        return false;
+        throw new UsernameNotFoundException("Product Not Found");
     }
 }
