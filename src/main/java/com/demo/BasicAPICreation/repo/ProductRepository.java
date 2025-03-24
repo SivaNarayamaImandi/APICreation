@@ -4,4 +4,5 @@ import com.demo.BasicAPICreation.modal.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ProductRepository extends JpaRepository<Product, Integer> {
+    Product findByUsername(String username);
 }

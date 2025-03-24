@@ -10,8 +10,10 @@ public class Product {
     @Id
     @Column(name = "product_id")
     private int id;
-    @Column(name = "product_name")
-    private String name;
+    @Column(name = "product_username")
+    private String username;
+    @Column(name = "product_password")
+    private String password;
     @Column(name = "product_price")
     @Min(value = 0, message = "Price must be at least 0")
     private double price;
