@@ -2,9 +2,11 @@ package com.demo.BasicAPICreation.controller;
 
 import com.demo.BasicAPICreation.modal.Product;
 import com.demo.BasicAPICreation.service.ProductService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -14,9 +16,14 @@ public class ProductController {
     @Autowired
     ProductService productService;
 
-    @GetMapping("/greet")
-    public String greet() {
-        return "Greetings from Spring Boot!";
+    @GetMapping("/")
+    public String greet(HttpServletRequest request) {
+        return "Welcome User!!!!!!!!!\n" + request.getSession().getId();
+    }
+
+    @GetMapping("/csrf-token")
+    public CsrfToken getCsrfToken(HttpServletRequest request){
+        return (CsrfToken) request.getAttribute("_csrf");
     }
 
     @GetMapping("/products")
