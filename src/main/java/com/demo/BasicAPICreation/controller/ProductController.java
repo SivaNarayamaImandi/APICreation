@@ -59,8 +59,9 @@ public class ProductController {
 
     @PostMapping("/verify-product")
     public ResponseEntity<String> verifyProduct(@RequestBody Product product) {
-        if (productService.verifyProduct(product) != null)
-            return new ResponseEntity<String>("Product verified successfully...", HttpStatus.OK);
+        String response = productService.verifyProduct(product);
+        if (response != null)
+            return new ResponseEntity<String>(response, HttpStatus.OK);
         return new ResponseEntity<String>("Product not verified successfully...", HttpStatus.NOT_FOUND);
     }
 }

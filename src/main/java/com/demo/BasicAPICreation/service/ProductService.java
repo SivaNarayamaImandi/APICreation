@@ -9,6 +9,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,6 +22,9 @@ public class ProductService {
 
     @Autowired
     AuthenticationManager authenticationManager;
+
+    @Autowired
+    private JWTService jwtService;
 
     private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(12);
 
@@ -60,9 +64,9 @@ public class ProductService {
 //        System.out.println("Attempting to verify product: " + product.getUsername());
         Authentication authentication =
                 authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(product.getUsername(), product.getPassword()));
-        if (authentication.isAuthenticated()){
+        if (authentication.isAuthenticated()) {
 //            System.out.println("Authentication successful for: " + product.getUsername());
-            return "Product Is Verified...";
+            return jwtService.generateToken(product.getUsername());
         }
 //        System.out.println("Authentication Failed for: " + product.getUsername());
         throw new UsernameNotFoundException("Product Not Found");
