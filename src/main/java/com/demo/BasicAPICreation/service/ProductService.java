@@ -1,11 +1,12 @@
 package com.demo.BasicAPICreation.service;
 
 import com.demo.BasicAPICreation.modal.Product;
-import com.demo.BasicAPICreation.modal.ProductPrincipal;
 import com.demo.BasicAPICreation.repo.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -13,19 +14,15 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class ProductService implements UserDetailsService {
+public class ProductService {
 
     @Autowired
     ProductRepository productRepository;
-    private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Product product = productRepository.findByUsername(username);
-        if (product == null)
-            throw new UsernameNotFoundException("User Not Found");
-        return new ProductPrincipal(product);
-    }
+    @Autowired
+    AuthenticationManager authenticationManager;
+
+    private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(12);
 
     public List<Product> getAllProducts() {
         if (productRepository.findAll().isEmpty())
@@ -58,4 +55,18 @@ public class ProductService implements UserDetailsService {
         }
         throw new UsernameNotFoundException("Product Not Found");
     }
+
+    public String verifyProduct(Product product) throws AuthenticationException {
+//        System.out.println("Attempting to verify product: " + product.getUsername());
+        Authentication authentication =
+                authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(product.getUsername(), product.getPassword()));
+        if (authentication.isAuthenticated()){
+//            System.out.println("Authentication successful for: " + product.getUsername());
+            return "Product Is Verified...";
+        }
+//        System.out.println("Authentication Failed for: " + product.getUsername());
+        throw new UsernameNotFoundException("Product Not Found");
+    }
+
+
 }

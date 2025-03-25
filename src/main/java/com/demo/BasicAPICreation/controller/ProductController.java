@@ -6,7 +6,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,7 +18,7 @@ public class ProductController {
 
     @GetMapping("/")
     public String greet(HttpServletRequest request) {
-        return "Welcome User!!!!!!!!!\n" + request.getSession().getId();
+        return "Welcome User!!!!!!!!! \n" + request.getSession().getId();
     }
 
     @GetMapping("/csrf-token")
@@ -56,5 +55,12 @@ public class ProductController {
         if (productService.deleteProduct(id))
             return new ResponseEntity<String>("Product deleted successfully...", HttpStatus.OK);
         return new ResponseEntity<String>("Product not found successfully...", HttpStatus.NOT_FOUND);
+    }
+
+    @PostMapping("/verify-product")
+    public ResponseEntity<String> verifyProduct(@RequestBody Product product) {
+        if (productService.verifyProduct(product) != null)
+            return new ResponseEntity<String>("Product verified successfully...", HttpStatus.OK);
+        return new ResponseEntity<String>("Product not verified successfully...", HttpStatus.NOT_FOUND);
     }
 }
