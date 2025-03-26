@@ -52,7 +52,10 @@ public class SecurityConfig {
                         .permitAll()
                         .anyRequest().authenticated())
 //                .formLogin(Customizer.withDefaults())
-                .httpBasic(Customizer.withDefaults()).sessionManagement(session
+                .oauth2Login(oauth2 -> oauth2
+                        .defaultSuccessUrl("/", true))
+                .httpBasic(Customizer.withDefaults())
+                .sessionManagement(session
                         -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
