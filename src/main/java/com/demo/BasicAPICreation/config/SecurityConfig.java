@@ -1,5 +1,6 @@
 package com.demo.BasicAPICreation.config;
 
+import com.demo.BasicAPICreation.filter.JwtFilter;
 import com.demo.BasicAPICreation.service.ProductUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -19,12 +20,16 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
     @Autowired
     private ProductUserDetailsService userDetailsService;
+
+    @Autowired
+    JwtFilter jwtFilter;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity security) throws Exception {
@@ -43,12 +48,13 @@ public class SecurityConfig {
         return security
                 .csrf(customizer -> customizer.disable())
                 .authorizeHttpRequests(request -> request
-                        .requestMatchers("add-products","verify-product")
+                        .requestMatchers("add-products", "verify-product")
                         .permitAll()
                         .anyRequest().authenticated())
 //                .formLogin(Customizer.withDefaults())
                 .httpBasic(Customizer.withDefaults()).sessionManagement(session
                         -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
 
